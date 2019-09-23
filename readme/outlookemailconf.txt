@@ -1,0 +1,11 @@
+
+1) update sasl_passwd in /etc/postfix that contains the credentials: the username and password.
+    
+2) postmap hash:/etc/postfix/sasl_passwd
+​ 
+3) update your email id in sender_canonical in /etc/postfix.
+​
+4) postmap hash:/etc/postfix/sender_canonical
+
+
+

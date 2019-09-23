@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.1.2 (Python 3.6.8 on linux)" generated="20190917 16:04:10.116" rpa="false">
+<suite id="s1" name="Test" source="/home/vidhi/TAF/tests/test.robot">
+<test id="s1-t1" name="TC1">
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>WO</arg>
+<arg>WO</arg>
+</arguments>
+<status status="PASS" starttime="20190917 16:04:10.141" endtime="20190917 16:04:10.141"></status>
+</kw>
+<tags>
+<tag>1</tag>
+<tag>sanity</tag>
+</tags>
+<status status="PASS" starttime="20190917 16:04:10.141" endtime="20190917 16:04:10.142" critical="yes"></status>
+</test>
+<test id="s1-t2" name="TC2">
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>by</arg>
+<arg>y</arg>
+</arguments>
+<msg timestamp="20190917 16:04:10.143" level="FAIL">by != y</msg>
+<status status="FAIL" starttime="20190917 16:04:10.142" endtime="20190917 16:04:10.143"></status>
+</kw>
+<status status="FAIL" starttime="20190917 16:04:10.142" endtime="20190917 16:04:10.143" critical="yes">by != y</status>
+</test>
+<test id="s1-t3" name="TC3">
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>30s</arg>
+</arguments>
+<msg timestamp="20190917 16:04:40.145" level="INFO">Slept 30 seconds</msg>
+<status status="PASS" starttime="20190917 16:04:10.144" endtime="20190917 16:04:40.145"></status>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>by</arg>
+<arg>y</arg>
+</arguments>
+<msg timestamp="20190917 16:04:40.146" level="FAIL">by != y</msg>
+<status status="FAIL" starttime="20190917 16:04:40.145" endtime="20190917 16:04:40.146"></status>
+</kw>
+<tags>
+<tag>3</tag>
+</tags>
+<status status="FAIL" starttime="20190917 16:04:10.143" endtime="20190917 16:04:40.146" critical="yes">by != y</status>
+</test>
+<status status="FAIL" starttime="20190917 16:04:10.117" endtime="20190917 16:04:40.146"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="2">Critical Tests</stat>
+<stat pass="1" fail="2">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="0">1</stat>
+<stat pass="0" fail="1">3</stat>
+<stat pass="1" fail="0">sanity</stat>
+</tag>
+<suite>
+<stat pass="1" fail="2" id="s1" name="Test">Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

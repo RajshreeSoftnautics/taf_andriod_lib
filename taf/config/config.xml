@@ -1,0 +1,26 @@
+<TAF>
+    <common>
+        <!-- Release environment, If not applicable keep it blank -->
+        <environment>gj</environment>
+        <!-- Release version, If not applicable keep it blank -->
+        <release></release>
+    </common>
+    <!-- Email Configuration, In case of more than one email address 
+	 provide comma separated email addresses -->
+    <email>
+        <!-- Kept appropriate protocol(tls/ssl) -->
+        <protocol>tls</protocol>
+        <!-- Kept appropriate port(587/465) -->
+        <port>587</port>
+        <smtpserver>smtp.office365.com</smtpserver>
+        <from>vidhi.pandya@softnautics.com</from>
+        <password>qzhxltfjmrbrjryx</password>
+    	<to>vidhi.pandya@softnautics.com, toral.mevada@softnautics.com</to>
+        <!-- If not applicable keep it blank -->
+	    <cc></cc>
+        <!-- If not applicable keep it blank -->
+        <bcc></bcc>
+        <subject>Results</subject>
+        <body>Hi Please find attach</body>
+    </email>
+</TAF>

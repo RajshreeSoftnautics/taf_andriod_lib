@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.1.2 (Python 3.6.8 on linux)" generated="20190918 10:40:17.624" rpa="false">
+<suite id="s1" name="Test" source="/home/vidhi/TAF/tests/test.robot">
+<test id="s1-t1" name="TC2">
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>by</arg>
+<arg>y</arg>
+</arguments>
+<msg timestamp="20190918 10:40:17.647" level="FAIL">by != y</msg>
+<status status="FAIL" starttime="20190918 10:40:17.647" endtime="20190918 10:40:17.647"></status>
+</kw>
+<status status="FAIL" starttime="20190918 10:40:17.647" endtime="20190918 10:40:17.648" critical="yes">by != y</status>
+</test>
+<test id="s1-t2" name="TC3">
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>30s</arg>
+</arguments>
+<msg timestamp="20190918 10:40:47.649" level="INFO">Slept 30 seconds</msg>
+<status status="PASS" starttime="20190918 10:40:17.648" endtime="20190918 10:40:47.649"></status>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>by</arg>
+<arg>y</arg>
+</arguments>
+<msg timestamp="20190918 10:40:47.649" level="FAIL">by != y</msg>
+<status status="FAIL" starttime="20190918 10:40:47.649" endtime="20190918 10:40:47.649"></status>
+</kw>
+<tags>
+<tag>3</tag>
+</tags>
+<status status="FAIL" starttime="20190918 10:40:17.648" endtime="20190918 10:40:47.650" critical="yes">by != y</status>
+</test>
+<status status="FAIL" starttime="20190918 10:40:17.625" endtime="20190918 10:40:47.650"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="2">Critical Tests</stat>
+<stat pass="0" fail="2">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="1">3</stat>
+</tag>
+<suite>
+<stat pass="0" fail="2" id="s1" name="Test">Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

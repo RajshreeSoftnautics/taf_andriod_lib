@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.1.2 (Python 3.6.8 on linux)" generated="20190918 10:42:22.521" rpa="false">
+<suite id="s1" name="Test" source="/home/vidhi/TAF/tests/test.robot">
+<kw name="Should Be Equal" library="BuiltIn" type="setup">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>0</arg>
+<arg>0</arg>
+</arguments>
+<status status="PASS" starttime="20190918 10:42:22.544" endtime="20190918 10:42:22.545"></status>
+</kw>
+<test id="s1-t1" name="TC2">
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>by</arg>
+<arg>y</arg>
+</arguments>
+<msg timestamp="20190918 10:42:22.546" level="FAIL">by != y</msg>
+<status status="FAIL" starttime="20190918 10:42:22.545" endtime="20190918 10:42:22.546"></status>
+</kw>
+<status status="FAIL" starttime="20190918 10:42:22.545" endtime="20190918 10:42:22.546" critical="yes">by != y</status>
+</test>
+<test id="s1-t2" name="TC3">
+<kw name="Sleep" library="BuiltIn">
+<doc>Pauses the test executed for the given time.</doc>
+<arguments>
+<arg>30s</arg>
+</arguments>
+<msg timestamp="20190918 10:42:52.547" level="INFO">Slept 30 seconds</msg>
+<status status="PASS" starttime="20190918 10:42:22.546" endtime="20190918 10:42:52.547"></status>
+</kw>
+<kw name="Should Be Equal" library="BuiltIn">
+<doc>Fails if the given objects are unequal.</doc>
+<arguments>
+<arg>by</arg>
+<arg>y</arg>
+</arguments>
+<msg timestamp="20190918 10:42:52.548" level="FAIL">by != y</msg>
+<status status="FAIL" starttime="20190918 10:42:52.547" endtime="20190918 10:42:52.548"></status>
+</kw>
+<tags>
+<tag>3</tag>
+</tags>
+<status status="FAIL" starttime="20190918 10:42:22.546" endtime="20190918 10:42:52.548" critical="yes">by != y</status>
+</test>
+<status status="FAIL" starttime="20190918 10:42:22.522" endtime="20190918 10:42:52.548"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="2">Critical Tests</stat>
+<stat pass="0" fail="2">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="1">3</stat>
+</tag>
+<suite>
+<stat pass="0" fail="2" id="s1" name="Test">Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
