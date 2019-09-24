@@ -30,8 +30,8 @@ It will run given test suite(s) using robot framework and create summary xlsx re
 
 ### Test Results
 
-* Go to taf/results/<year-month-date>/
-* That folder will contain all robot framework logs: output-<testsuitename>-<yearmonthdate>-<hrminsec>.xml,
-                                                      log-<testsuitename>-<yearmonthdate>-<hrminsec>.html,
-                                                      report-<testsuitename>-<yearmonthdate>-<hrminsec>.html
-* That folder will also contain summary report: Summary-Report-<yearmonthdate>-<hrminsec>.xlsx
+* Go to taf/results/year-month-date/
+* That folder will contain all robot framework logs: output-testsuitename-yearmonthdate-hrminsec.xml,
+                                                      log-testsuitename-yearmonthdate-hrminsec.html,
+                                                      report-testsuitename-yearmonthdate-hrminsec.html
+* That folder will also contain summary report: Summary-Report-yearmonthdate-hrminsec.xlsx
