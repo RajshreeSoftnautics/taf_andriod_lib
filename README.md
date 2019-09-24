@@ -21,7 +21,7 @@ It will run given test suite(s) using robot framework and create summary xlsx re
 ### Test Configuration
 
 * Go to taf/config/config.xml file and provide appropriate data.
-* If user want to use any robot framework command line options rather than(-o, -l, -r, -d, -i, -e, -A) than go to taf/config/robotarg.txt file and add that all command line options.
+* If user want to use any robot framework command line options rather than(-o, -l, -r, -d, -i, -e, -A) then go to taf/config/robotarg.txt file and add that all command line options.
 
 ### Run Test Framework
 
