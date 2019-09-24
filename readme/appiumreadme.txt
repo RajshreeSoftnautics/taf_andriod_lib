@@ -1,5 +1,5 @@
 ### Install Android Studio And Android SDK:
-- Download Android Studio from "https://developer.android.com/studio?gclid=EAIaIQobChMI6Z2LhJ7p5AIVwQorCh11NAdNEAAYASAAEgIzUPD_BwE" it will ask uou for android sdk path, after providing path it will download android sdk over that path.
+- Download Android Studio from "https://developer.android.com/studio?gclid=EAIaIQobChMI6Z2LhJ7p5AIVwQorCh11NAdNEAAYASAAEgIzUPD_BwE" it will ask you for android sdk path, after providing path it will download android sdk over that path.
 
 ### Install Node:
 - sudo apt-get install curl
