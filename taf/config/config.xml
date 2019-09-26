@@ -5,6 +5,17 @@
         <!-- Release version, If not applicable keep it blank -->
         <release></release>
     </common>
+    <android>
+        <!-- Provide "apkpath" or "apppkg", "appactivity" -->
+        <!-- Provide absolute path of apk file -->
+        <apkpath>ds</apkpath>
+        <!-- Provide application launch activity -->
+        <apppkg></apppkg>
+        <!-- Provide application package name -->
+        <appactivity></appactivity>
+    </android>
+    <ios>
+    </ios>
     <!-- Email Configuration, In case of more than one email address 
 	 provide comma separated email addresses -->
     <email>

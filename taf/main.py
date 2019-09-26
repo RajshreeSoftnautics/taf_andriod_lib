@@ -203,11 +203,13 @@ class main():
             self.configDict = self.commonObj.xmlToDictConverter(
                 CONFIG_FILE_PATH)
 
+            # common section
             os.environ["environment"] = str(self.configDict['TAF']['common']
                                             ['environment'])
             os.environ["release"] = str(self.configDict['TAF']['common']
                                         ['release'])
 
+            # email section
             os.environ["emailprotocol"] = str(self.configDict['TAF']['email']
                                               ['protocol'])
             os.environ["emailport"] = str(self.configDict['TAF']['email']
@@ -249,9 +251,15 @@ class main():
             if self.platform is None:
                 pass
             elif self.platform.lower() == "android":
-                pass  # set android prerequisite
+                os.environ["platform"] = "Android"
+                os.environ["apkpath"] = str(self.configDict['TAF']['android']
+                                            ['apkpath'])
+                os.environ["apppkg"] = str(self.configDict['TAF']['android']
+                                           ['apppkg'])
+                os.environ["appactivity"] = str(self.configDict['TAF']
+                                                ['android']['appactivity'])
             elif self.platform.lower() == "ios":
-                pass  # set ios prerequisite
+                os.environ["platform"] = "iOS"
             elif self.platform.lower() == "cloud":
                 pass  # set cloud prerequisite
             else:
