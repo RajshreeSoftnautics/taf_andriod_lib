@@ -25,4 +25,4 @@ class common():
             dic = json.loads(dic)
             return dic
         except Exception as error:
-            return str(error)
+            return (False, error)
