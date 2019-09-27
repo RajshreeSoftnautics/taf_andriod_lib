@@ -71,8 +71,7 @@ class sendemail():
             print("Email Sent")
 
         except Exception as error:
-            print("Exception while sending email, Please provide correct\
-data in config file")
+            print("Exception while sending email: " + str(error))
             return (False, error)
 
         return True

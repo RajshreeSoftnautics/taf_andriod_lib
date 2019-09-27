@@ -5,6 +5,8 @@
         <!-- Release version, If not applicable keep it blank -->
         <release></release>
     </common>
+    <!-- Android Configuration, If your test runs over android device
+	 then provide android configuration -->
     <android>
         <!-- Provide "apkpath" or "apppkg", "appactivity" -->
         <!-- Provide absolute path of apk file -->
@@ -14,6 +16,8 @@
         <!-- Provide application package name -->
         <appactivity></appactivity>
     </android>
+    <!-- iOS Configuration, If your test runs over iOS device
+	 then provide iOS configuration -->
     <ios>
     </ios>
     <!-- Email Configuration, In case of more than one email address 
