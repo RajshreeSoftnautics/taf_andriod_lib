@@ -60,13 +60,3 @@ class android():
 
         except Exception as error:
             return (False, error)
-
-
-if __name__ == "__main__":
-    objMain = android()
-    objMain.startAppium()
-    objMain.stopAppium()
-    objMain.startAppium()
-    objMain.stopAppium()
-    listName = objMain.getConnectedDeviceList()
-    print(listName)

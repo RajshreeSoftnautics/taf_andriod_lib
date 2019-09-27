@@ -12,6 +12,7 @@ import getopt
 import src.common
 import src.sendemail
 import src.reportgenerator
+import lib.android.src.android
 
 from robot.api import ExecutionResult, ResultVisitor
 
@@ -90,9 +91,11 @@ class main():
         self.testResult = {}
         self.testStatistics = {}
         self.suiteStatistics = {}
+        self.deviceList = []
         self.commonObj = src.common.common()
         self.sendmailObj = src.sendemail.sendemail()
         self.reportObj = src.reportgenerator.reportgenerator()
+        self.andLibObj = lib.android.src.android.android()
 
     def _suiteStatistics(self, xmlFileList):
         """
@@ -141,8 +144,9 @@ class main():
 
                      Arguments:
                      **********
-                     -c/--component: Provide entry component\
-(ex: android/iOS/cloud).
+                     -c/--component: Provide android/ios component.
+                                     This is mandatory if your test runs over\
+ android or ios.
 
                      -t/--testsuite: Provide absolute path of Test Suite.
                                      This is mandatory tag.
@@ -252,7 +256,6 @@ class main():
                 pass
             elif self.platform.lower() == "android":
                 # set config android environment variables
-
                 os.environ["platform"] = "Android"
                 os.environ["apkpath"] = str(self.configDict['TAF']['android']
                                             ['apkpath'])
@@ -262,6 +265,16 @@ class main():
                                                 ['android']['appactivity'])
 
                 # get connected device(s) list
+                self.deviceList = self.andLibObj.getConnectedDeviceList()
+                if self.deviceList:
+                    for device in self.deviceList:
+                        for key, value in device.items():
+                            if value == "offline":
+                                print("Device in offline mode...")
+                                sys.exit(1)
+                else:
+                    print("Connected device or emulator Not Found...")
+                    sys.exit(1)
             elif self.platform.lower() == "ios":
                 os.environ["platform"] = "iOS"
             elif self.platform.lower() == "cloud":
