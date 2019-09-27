@@ -251,6 +251,8 @@ class main():
             if self.platform is None:
                 pass
             elif self.platform.lower() == "android":
+                # set config android environment variables
+
                 os.environ["platform"] = "Android"
                 os.environ["apkpath"] = str(self.configDict['TAF']['android']
                                             ['apkpath'])
@@ -258,6 +260,8 @@ class main():
                                            ['apppkg'])
                 os.environ["appactivity"] = str(self.configDict['TAF']
                                                 ['android']['appactivity'])
+
+                # get connected device(s) list
             elif self.platform.lower() == "ios":
                 os.environ["platform"] = "iOS"
             elif self.platform.lower() == "cloud":
