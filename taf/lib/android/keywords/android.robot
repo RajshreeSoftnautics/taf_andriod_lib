@@ -141,3 +141,157 @@ Get Android Logs
     ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} logcat > ${filePath}
     ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
     Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Airplane Mode
+    [Documentation]    Open airplane mode setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.AIRPLANE_MODE_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Battery Saver Mode
+    [Documentation]    Open battery saver mode setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.BATTERY_SAVER_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Bluetooth Mode
+    [Documentation]    Open bluetooth mode setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.BLUETOOTH_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Data Roaming Page
+    [Documentation]    Open data roaming setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.DATA_ROAMING_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Device Info Page
+    [Documentation]    Open device info setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.DEVICE_INFO_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Display Page
+    [Documentation]    Open display setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.DISPLAY_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Location Page
+    [Documentation]    Open location setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.LOCATION_SOURCE_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Default Application Page
+    [Documentation]    Open default application setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.MANAGE_DEFAULT_APPS_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Privacy Page
+    [Documentation]    Open privacy setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.PRIVACY_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Setting Page
+    [Documentation]    Open setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Sound Setting Page
+    [Documentation]    Open sound setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s {deviceName} shell am start -a android.settings.SOUND_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open VPN Setting Page
+    [Documentation]    Open vpn setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s {deviceName} shell am start -a android.settings.VPN_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open WiFi Setting Page
+    [Documentation]    Open wifi setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am start -a android.settings.WIFI_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Open Wireless Setting Page
+    [Documentation]    Open wireless setting page
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s {deviceName} shell am start -a android.settings.WIRELESS_SETTINGS
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
