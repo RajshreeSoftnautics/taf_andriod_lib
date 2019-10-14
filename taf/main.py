@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import getopt
+from multiprocessing import Process
 import src.common
 import src.sendemail
 import src.reportgenerator
@@ -86,6 +87,7 @@ class main():
     def __init__(self):
         self.platform = None
         self.tests = None
+        self.parallel = False
         self.testsToRun = ""
         self.testsToSkip = ""
         self.testResult = {}
@@ -154,6 +156,9 @@ class main():
                      -i/--include: Select test cases to run by tag.
 
                      -e/--exclude: Select test cases not to run by tag.
+                     
+                     -p/--parallel: Run parallel execution over all connected\
+ android/iOS device/emulator(s). (Works with android/iOS component only.)
 
                      -h/--help: Print Usage.
 
@@ -161,7 +166,7 @@ class main():
                      *********
                      1) python main.py -c android -t \
 /home/xyz/automation/Mobile.robot
-                     2) python main.py -c iOS -t \
+                     2) python main.py -c iOS -p -t \
 "/home/xyz/automation/iOS.robot /home/xyz/automation/Mobile.robot"
                      3) python main.py -c cloud -t \
 "/home/xyz/automation/iOS.robot /home/xyz/automation/Mobile.robot" \
@@ -176,9 +181,10 @@ class main():
         Command line argument parser
         """
         try:
-            opts, args = getopt.getopt(sys.argv[1:], 'c:t:i:e:h',
+            opts, args = getopt.getopt(sys.argv[1:], 'c:t:i:e:p:h',
                                        ['component=', 'testsuite=',
-                                        'include=', 'exclude=', 'help='])
+                                        'include=', 'exclude=', 'parallel=',
+                                        'help='])
         except getopt.GetoptError:
             self._usage()
             sys.exit(2)
@@ -195,6 +201,8 @@ class main():
                 self.testsToRun = arg
             elif opt in ('-e', '--exclude'):
                 self.testsToSkip = arg
+            elif opt in ('-p', '--parallel'):
+                self.parallel = True
             else:
                 self._usage()
                 sys.exit(2)
@@ -267,11 +275,14 @@ class main():
                 # get connected device(s) list
                 self.deviceList = self.andLibObj.getConnectedDeviceList()
                 if self.deviceList:
+                    self.device = []
                     for device in self.deviceList:
                         for key, value in device.items():
                             if value == "offline":
                                 print("Device in offline mode...")
                                 sys.exit(1)
+                            else:
+                                self.device.append(key)
                 else:
                     print("Connected device or emulator Not Found...")
                     sys.exit(1)
@@ -287,7 +298,7 @@ class main():
         except Exception as error:
             return (False, error)
 
-    def robotRun(self):
+    def robotRun(self, UDID, appiumPort, systemPort):
         """
         Run given test suite(s) using robot framework,
         generate report and send email
@@ -304,41 +315,48 @@ class main():
                 excludeCmd += "-e " + tag + " "
 
             xmlResultList = []
-            robotResultList = []
+            self.robotResultList = []
 
+            remoteURL = "http://localhost:" + str(appiumPort) + "/wd/hub"
+            import pdb
             for testSuite in self.testList:
-                robotRunCmd = ""
+                robotCmd = ""
                 currentDate = time.strftime("%Y-%m-%d")
                 currentTime = time.strftime("%Y%m%d-%H%M%S")
                 if not os.path.exists(ROBOT_LOG_DIR_PATH + "/" + currentDate):
                     os.makedirs(ROBOT_LOG_DIR_PATH + "/" + currentDate)
 
                 testSuiteName = testSuite.split("/")[-1].split(".")[0]
-                robotRunCmd = "robot -o output-" + testSuiteName + "-" + \
-                              currentTime
-                robotRunCmd += " -l log-" + testSuiteName + "-" + currentTime
-                robotRunCmd += " -r report-" + testSuiteName + "-" + \
-                               currentTime
-                robotRunCmd += " -d " + ROBOT_LOG_DIR_PATH + "/" + \
+                robotCmd = "robot -o output-" + testSuiteName + "-" + \
+                               UDID + "_" + currentTime
+                robotCmd += " -l log-" + testSuiteName + "-" + UDID + "_" + currentTime
+                robotCmd += " -r report-" + testSuiteName + "-" + \
+                               UDID + "_" + currentTime
+                robotCmd += " -d " + ROBOT_LOG_DIR_PATH + "/" + \
                                currentDate + "/"
-                robotRunCmd += " "
-                robotRunCmd += includeCmd
-                robotRunCmd += excludeCmd
-                robotRunCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
+                robotCmd += " "
+                robotCmd += includeCmd
+                robotCmd += excludeCmd
+                robotCmd += "-v remoteURL:" + remoteURL + " -v deviceName:" + UDID + " -v systemPort:" + str(systemPort)
+                robotCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
 
-                os.system(robotRunCmd)
+                #pdb.set_trace()
+                print("########" + str(robotCmd))
+                os.system(robotCmd)
 
                 # collect robot result(s)
                 xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
                                      + "/output-" + testSuiteName + "-"
                                      + currentTime + ".xml")
-                robotResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
+                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
                                        + "/log-" + testSuiteName + "-"
                                        + currentTime + ".html")
-                robotResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
+                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
                                        + "/report-" + testSuiteName + "-"
                                        + currentTime + ".html")
-            robotResultList.extend(xmlResultList)
+
+
+            self.robotResultList.extend(xmlResultList)
 
             # generate result call
             self._suiteStatistics(xmlResultList)
@@ -351,11 +369,29 @@ class main():
 
             self.reportObj.xlsReport(commonConfig, self.suiteStatistics,
                                      self.testStatistics, xlsReportPath)
-            robotResultList.append(xlsReportPath)
+            self.robotResultList.append(xlsReportPath)
             print("\n##########################################")
             print("Summary Report PATH: " + str(xlsReportPath))
             print("##########################################\n")
 
+        except Exception as error:
+            return (False, error)
+
+    def suiteExecuter(self):
+        appiumPort = 4722
+        systemPort = 8200
+        import pdb
+        #pdb.set_trace()
+        for UDID in self.device:
+            appiumPort = int(appiumPort) + 1
+            systemPort = int(systemPort) + 1
+            #self.robotRun(UDID, appiumPort, systemPort)
+            process = Process(target=self.robotRun, args=(UDID, appiumPort, systemPort, ))
+            process.start()
+        process.join()
+
+    def sendEmail(self):
+        try:
             if os.environ["emailto"] == 'None':
                 toAddr = []
             else:
@@ -379,7 +415,7 @@ class main():
                                        os.environ["emailpassword"],
                                        toAddr, ccAddr, bccAddr,
                                        os.environ["emailbody"],
-                                       robotResultList)
+                                       self.robotResultList)
 
         except Exception as error:
             return (False, error)
@@ -392,4 +428,5 @@ if __name__ == "__main__":
     objMain.argParser()
     objMain._configParser()
     objMain._setPrerequisite()
-    objMain.robotRun()
+    objMain.suiteExecuter()
+    #objMain.sendEmail()
