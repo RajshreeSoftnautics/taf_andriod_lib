@@ -94,6 +94,7 @@ class main():
         self.testStatistics = {}
         self.suiteStatistics = {}
         self.deviceList = []
+        self.robotResultList = []
         self.commonObj = src.common.common()
         self.sendmailObj = src.sendemail.sendemail()
         self.reportObj = src.reportgenerator.reportgenerator()
@@ -298,7 +299,7 @@ class main():
         except Exception as error:
             return (False, error)
 
-    def robotRun(self, UDID, appiumPort, systemPort):
+    def robotRun(self, UDID=None, appiumPort=4723, systemPort=8200):
         """
         Run given test suite(s) using robot framework,
         generate report and send email
@@ -315,8 +316,7 @@ class main():
                 excludeCmd += "-e " + tag + " "
 
             xmlResultList = []
-            self.robotResultList = []
-
+            
             remoteURL = "http://localhost:" + str(appiumPort) + "/wd/hub"
             for testSuite in self.testList:
                 robotCmd = ""
@@ -326,35 +326,58 @@ class main():
                     os.makedirs(ROBOT_LOG_DIR_PATH + "/" + currentDate)
 
                 testSuiteName = testSuite.split("/")[-1].split(".")[0]
-                robotCmd = "robot -o output-" + testSuiteName + "-" + \
-                           UDID + "_" + currentTime
-                robotCmd += " -l log-" + testSuiteName + "-" + UDID + "_" + \
-                            currentTime
-                robotCmd += " -r report-" + testSuiteName + "-" + \
-                            UDID + "_" + currentTime
+                if self.platform.lower() == "android" or "ios":
+                    robotCmd = "robot -o output-" + testSuiteName + "-" + \
+                               UDID + "_" + currentTime
+                    robotCmd += " -l log-" + testSuiteName + "-" + UDID + "_" + \
+                                currentTime
+                    robotCmd += " -r report-" + testSuiteName + "-" + \
+                                UDID + "_" + currentTime
+                else:
+                    robotCmd = "robot -o output-" + testSuiteName + "-" + \
+                               "_" + currentTime
+                    robotCmd += " -l log-" + testSuiteName + "-" + "_" + \
+                                currentTime
+                    robotCmd += " -r report-" + testSuiteName + "-" + \
+                                "_" + currentTime
                 robotCmd += " -d " + ROBOT_LOG_DIR_PATH + "/" + \
                             currentDate + "/"
                 robotCmd += " "
                 robotCmd += includeCmd
                 robotCmd += excludeCmd
-                robotCmd += "-v remoteURL:" + remoteURL + " -v deviceName:" \
-                            + UDID + " -v systemPort:" + str(systemPort)
+                if self.platform.lower() == "android":
+                    robotCmd += "-v remoteURL:" + remoteURL + " -v deviceName:" \
+                                + UDID + " -v systemPort:" + str(systemPort)
                 robotCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
 
                 os.system(robotCmd)
 
                 # collect robot result(s)
-                xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
-                                     + "/output-" + testSuiteName + "-"
-                                     + UDID + "_" + currentTime + ".xml")
-                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                            + currentDate + "/log-"
-                                            + testSuiteName + "-" + UDID
-                                            + "_" + currentTime + ".html")
-                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                            + currentDate + "/report-"
-                                            + testSuiteName + "-" + UDID + "_"
-                                            + currentTime + ".html")
+                if self.platform.lower() == "android" or "ios":
+                    xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
+                                         + "/output-" + testSuiteName + "-"
+                                         + UDID + "_" + currentTime + ".xml")
+                    self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                                + currentDate + "/log-"
+                                                + testSuiteName + "-" + UDID
+                                                + "_" + currentTime + ".html")
+                    self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                                + currentDate + "/report-"
+                                                + testSuiteName + "-" + UDID + "_"
+                                                + currentTime + ".html")
+
+                else:
+                    xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
+                                         + "/output-" + testSuiteName + "-"
+                                         + "_" + currentTime + ".xml")
+                    self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                                + currentDate + "/log-"
+                                                + testSuiteName + "-" +
+                                                "_" + currentTime + ".html")
+                    self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                                + currentDate + "/report-"
+                                                + testSuiteName + "-" + "_"
+                                                + currentTime + ".html")
 
             self.robotResultList.extend(xmlResultList)
 
@@ -384,15 +407,28 @@ class main():
             for UDID in self.device:
                 appiumPort = int(appiumPort) + 1
                 systemPort = int(systemPort) + 1
+                appiumStatus = self.andLibObj.checkAppiumServerStatus()
+                if appiumStatus:
+                    self.andLibObj.stopAppium(appiumPort)
                 process = Process(target=self.robotRun, args=(UDID,
                                   appiumPort, systemPort, ))
                 process.start()
             process.join()
+            appiumStatus = self.andLibObj.checkAppiumServerStatus()
+            if appiumStatus:
+                self.andLibObj.stopAppium(appiumPort)
 
         elif self.platform.lower() == "android" and self.parallel is False:
             appiumPort = 4723
             systemPort = 8200
+            appiumStatus = self.andLibObj.checkAppiumServerStatus()
+            if appiumStatus:
+                self.andLibObj.stopAppium(appiumPort)
+            self.andLibObj.startAppium(appiumPort)
             self.robotRun(self.device[0], appiumPort, systemPort)
+            appiumStatus = self.andLibObj.checkAppiumServerStatus()
+            if appiumStatus:
+                self.andLibObj.stopAppium(appiumPort)
 
     def sendEmail(self):
         try:

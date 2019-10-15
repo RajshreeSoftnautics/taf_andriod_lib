@@ -13,6 +13,14 @@ class android():
         self.devices = []
         self.deviceDict = {}
 
+    def checkAppiumServerStatus(self):
+        try:
+            pid = subprocess.Popen("pgrep [n]ode", shell=True,
+                                   stdout=subprocess.PIPE)
+            return pid.stdout.readline().decode('utf-8').rstrip()
+        except Exception as error:
+            return (False, error)
+
     def stopAppium(self, port=4723):
         """
         stop appium server
