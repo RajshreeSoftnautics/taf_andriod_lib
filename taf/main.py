@@ -10,6 +10,8 @@ import sys
 import time
 import getopt
 from multiprocessing import Process
+from multiprocessing import Manager
+
 import src.common
 import src.sendemail
 import src.reportgenerator
@@ -94,7 +96,8 @@ class main():
         self.testStatistics = {}
         self.suiteStatistics = {}
         self.deviceList = []
-        self.robotResultList = []
+        manager = Manager()
+        self.robotResultList = manager.list()
         self.commonObj = src.common.common()
         self.sendmailObj = src.sendemail.sendemail()
         self.reportObj = src.reportgenerator.reportgenerator()
@@ -347,7 +350,7 @@ class main():
                 robotCmd += excludeCmd
                 if self.platform.lower() == "android":
                     robotCmd += "-v remoteURL:" + remoteURL + \
-                                " -v deviceName:" \ + UDID + \
+                                " -v deviceName:" + UDID + \
                                 " -v systemPort:" + str(systemPort)
                 robotCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
 
@@ -411,6 +414,7 @@ class main():
                 appiumStatus = self.andLibObj.checkAppiumServerStatus()
                 if appiumStatus:
                     self.andLibObj.stopAppium(appiumPort)
+                self.andLibObj.startAppium(appiumPort)
                 process = Process(target=self.robotRun, args=(UDID,
                                   appiumPort, systemPort, ))
                 process.start()
