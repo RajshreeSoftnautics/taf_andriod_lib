@@ -156,7 +156,7 @@ class main():
                      -i/--include: Select test cases to run by tag.
 
                      -e/--exclude: Select test cases not to run by tag.
-                     
+
                      -p/--parallel: Run parallel execution over all connected\
  android/iOS device/emulator(s). (Works with android/iOS component only.)
 
@@ -181,7 +181,7 @@ class main():
         Command line argument parser
         """
         try:
-            opts, args = getopt.getopt(sys.argv[1:], 'c:t:i:e:p:h',
+            opts, args = getopt.getopt(sys.argv[1:], 'c:t:i:e:ph',
                                        ['component=', 'testsuite=',
                                         'include=', 'exclude=', 'parallel=',
                                         'help='])
@@ -318,7 +318,6 @@ class main():
             self.robotResultList = []
 
             remoteURL = "http://localhost:" + str(appiumPort) + "/wd/hub"
-            import pdb
             for testSuite in self.testList:
                 robotCmd = ""
                 currentDate = time.strftime("%Y-%m-%d")
@@ -328,33 +327,34 @@ class main():
 
                 testSuiteName = testSuite.split("/")[-1].split(".")[0]
                 robotCmd = "robot -o output-" + testSuiteName + "-" + \
-                               UDID + "_" + currentTime
-                robotCmd += " -l log-" + testSuiteName + "-" + UDID + "_" + currentTime
+                           UDID + "_" + currentTime
+                robotCmd += " -l log-" + testSuiteName + "-" + UDID + "_" + \
+                            currentTime
                 robotCmd += " -r report-" + testSuiteName + "-" + \
-                               UDID + "_" + currentTime
+                            UDID + "_" + currentTime
                 robotCmd += " -d " + ROBOT_LOG_DIR_PATH + "/" + \
-                               currentDate + "/"
+                            currentDate + "/"
                 robotCmd += " "
                 robotCmd += includeCmd
                 robotCmd += excludeCmd
-                robotCmd += "-v remoteURL:" + remoteURL + " -v deviceName:" + UDID + " -v systemPort:" + str(systemPort)
+                robotCmd += "-v remoteURL:" + remoteURL + " -v deviceName:" \
+                            + UDID + " -v systemPort:" + str(systemPort)
                 robotCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
 
-                #pdb.set_trace()
-                print("########" + str(robotCmd))
                 os.system(robotCmd)
 
                 # collect robot result(s)
                 xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
                                      + "/output-" + testSuiteName + "-"
-                                     + currentTime + ".xml")
-                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
-                                       + "/log-" + testSuiteName + "-"
-                                       + currentTime + ".html")
-                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
-                                       + "/report-" + testSuiteName + "-"
-                                       + currentTime + ".html")
-
+                                     + UDID + "_" + currentTime + ".xml")
+                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                            + currentDate + "/log-"
+                                            + testSuiteName + "-" + UDID
+                                            + "_" + currentTime + ".html")
+                self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                            + currentDate + "/report-"
+                                            + testSuiteName + "-" + UDID + "_"
+                                            + currentTime + ".html")
 
             self.robotResultList.extend(xmlResultList)
 
@@ -378,17 +378,21 @@ class main():
             return (False, error)
 
     def suiteExecuter(self):
-        appiumPort = 4722
-        systemPort = 8200
-        import pdb
-        #pdb.set_trace()
-        for UDID in self.device:
-            appiumPort = int(appiumPort) + 1
-            systemPort = int(systemPort) + 1
-            #self.robotRun(UDID, appiumPort, systemPort)
-            process = Process(target=self.robotRun, args=(UDID, appiumPort, systemPort, ))
-            process.start()
-        process.join()
+        if self.platform.lower() == "android" and self.parallel is True:
+            appiumPort = 4722
+            systemPort = 8199
+            for UDID in self.device:
+                appiumPort = int(appiumPort) + 1
+                systemPort = int(systemPort) + 1
+                process = Process(target=self.robotRun, args=(UDID,
+                                  appiumPort, systemPort, ))
+                process.start()
+            process.join()
+
+        elif self.platform.lower() == "android" and self.parallel is False:
+            appiumPort = 4723
+            systemPort = 8200
+            self.robotRun(self.device[0], appiumPort, systemPort)
 
     def sendEmail(self):
         try:
@@ -429,4 +433,4 @@ if __name__ == "__main__":
     objMain._configParser()
     objMain._setPrerequisite()
     objMain.suiteExecuter()
-    #objMain.sendEmail()
+    objMain.sendEmail()
