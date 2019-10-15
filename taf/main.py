@@ -316,7 +316,7 @@ class main():
                 excludeCmd += "-e " + tag + " "
 
             xmlResultList = []
-            
+
             remoteURL = "http://localhost:" + str(appiumPort) + "/wd/hub"
             for testSuite in self.testList:
                 robotCmd = ""
@@ -329,8 +329,8 @@ class main():
                 if self.platform.lower() == "android" or "ios":
                     robotCmd = "robot -o output-" + testSuiteName + "-" + \
                                UDID + "_" + currentTime
-                    robotCmd += " -l log-" + testSuiteName + "-" + UDID + "_" + \
-                                currentTime
+                    robotCmd += " -l log-" + testSuiteName + "-" + UDID + \
+                                "_" + currentTime
                     robotCmd += " -r report-" + testSuiteName + "-" + \
                                 UDID + "_" + currentTime
                 else:
@@ -346,8 +346,9 @@ class main():
                 robotCmd += includeCmd
                 robotCmd += excludeCmd
                 if self.platform.lower() == "android":
-                    robotCmd += "-v remoteURL:" + remoteURL + " -v deviceName:" \
-                                + UDID + " -v systemPort:" + str(systemPort)
+                    robotCmd += "-v remoteURL:" + remoteURL + \
+                                " -v deviceName:" \ + UDID + \
+                                " -v systemPort:" + str(systemPort)
                 robotCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
 
                 os.system(robotCmd)
@@ -363,8 +364,8 @@ class main():
                                                 + "_" + currentTime + ".html")
                     self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
                                                 + currentDate + "/report-"
-                                                + testSuiteName + "-" + UDID + "_"
-                                                + currentTime + ".html")
+                                                + testSuiteName + "-" + UDID
+                                                + "_" + currentTime + ".html")
 
                 else:
                     xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
