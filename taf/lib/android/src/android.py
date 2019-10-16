@@ -15,20 +15,23 @@ class android():
 
     def checkAppiumServerStatus(self):
         try:
+            appiumProcess = []
             pid = subprocess.Popen("pgrep [n]ode", shell=True,
                                    stdout=subprocess.PIPE)
-            return pid.stdout.readline().decode('utf-8').rstrip()
+            for process in pid.stdout:
+                appiumProcess.append(process.decode('utf-8').rstrip())
+            return appiumProcess
         except Exception as error:
             return (False, error)
 
-    def stopAppium(self, port=4723):
+    def stopAppium(self, pid):
         """
         stop appium server
         Args:
         port: port number on which appium server runs
         """
         try:
-            state = os.system("kill $(lsof -t -i:" + str(port) + ")")
+            state = os.system("kill -9 " + str(pid))
             return state
         except Exception as error:
             return (False, error)

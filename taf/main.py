@@ -408,12 +408,13 @@ class main():
         if self.platform.lower() == "android" and self.parallel is True:
             appiumPort = 4722
             systemPort = 8199
+            appiumStatus = self.andLibObj.checkAppiumServerStatus()
+            if appiumStatus:
+                for process in appiumStatus:
+                    self.andLibObj.stopAppium(process)
             for UDID in self.device:
                 appiumPort = int(appiumPort) + 1
                 systemPort = int(systemPort) + 1
-                appiumStatus = self.andLibObj.checkAppiumServerStatus()
-                if appiumStatus:
-                    self.andLibObj.stopAppium(appiumPort)
                 self.andLibObj.startAppium(appiumPort)
                 process = Process(target=self.robotRun, args=(UDID,
                                   appiumPort, systemPort, ))
@@ -421,19 +422,22 @@ class main():
             process.join()
             appiumStatus = self.andLibObj.checkAppiumServerStatus()
             if appiumStatus:
-                self.andLibObj.stopAppium(appiumPort)
+                for process in appiumStatus:
+                    self.andLibObj.stopAppium(process)
 
         elif self.platform.lower() == "android" and self.parallel is False:
             appiumPort = 4723
             systemPort = 8200
             appiumStatus = self.andLibObj.checkAppiumServerStatus()
             if appiumStatus:
-                self.andLibObj.stopAppium(appiumPort)
+                for process in appiumStatus:
+                    self.andLibObj.stopAppium(process)
             self.andLibObj.startAppium(appiumPort)
             self.robotRun(self.device[0], appiumPort, systemPort)
             appiumStatus = self.andLibObj.checkAppiumServerStatus()
             if appiumStatus:
-                self.andLibObj.stopAppium(appiumPort)
+                for process in appiumStatus:
+                    self.andLibObj.stopAppium(process)
 
     def sendEmail(self):
         try:
