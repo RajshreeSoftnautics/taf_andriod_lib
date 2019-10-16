@@ -1,17 +1,23 @@
 *** Settings ***
 Library    OperatingSystem
 Resource    ${CURDIR}/../taf/lib/android/keywords/android.robot
+Resource    ${CURDIR}/../taf/lib/common/keywords/common.robot
 
 *** Variables ***
 ${device}    emulator-5554
 
 *** Test Cases ***
-Start Appium
-    ${result}    Start Appium Server
-    log to console    \n\n${result}
+Get Appium Process
+    ${pid}    Get Appium Process Id List
+    log to console    \n\n${pid}
+    Set Suite Variable    ${pid}
 
 Stop Appium
-    ${result}    Stop Appium Server
+    ${result}    Stop Appium Server    ${pid[0]}
+    log to console    \n\n${result}
+
+Start Appium
+    ${result}    Start Appium Server
     log to console    \n\n${result}
 
 Get List
