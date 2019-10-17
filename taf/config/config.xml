@@ -10,7 +10,7 @@
     <android>
         <!-- Provide "apkpath" or "apppkg", "appactivity" -->
         <!-- Provide absolute path of apk file -->
-        <apkpath>ds</apkpath>
+        <apkpath>/home/vidhi/Downloads/EriBank.apk</apkpath>
         <!-- Provide application launch activity -->
         <apppkg></apppkg>
         <!-- Provide application package name -->

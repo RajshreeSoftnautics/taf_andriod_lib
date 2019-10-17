@@ -197,13 +197,22 @@ class reportgenerator():
                 self.row = self.row + len(testResult)
                 suiteResult = []
                 for key, value in suiteData.items():
-                    if key.lower() == sheetName:
-                        result = [key]
-                        result.extend([(d) for d in value.values()])
-                        suiteResult.append(tuple(result))
-                        break
+                    if isMobile is False:
+                        if key.lower() == sheetName:
+                            result = [key]
+                            result.extend([(d) for d in value.values()])
+                            suiteResult.append(tuple(result))
+                            break
+                        else:
+                            continue
                     else:
-                        continue
+                        if key.lower() == sheetName.split("-")[0]:
+                            result = [key]
+                            result.extend([(d) for d in value.values()])
+                            suiteResult.append(tuple(result))
+                            break
+                        else:
+                            continue
 
                 self.col = 1
                 self.row = self._dataCreation(sName, suiteResult, self.row, 0)
