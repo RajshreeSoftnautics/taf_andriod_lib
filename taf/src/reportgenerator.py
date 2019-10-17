@@ -62,7 +62,8 @@ class reportgenerator():
             row += 1
         return row
 
-    def xlsReport(self, commonData, suiteData, testData, fileName):
+    def xlsReport(self, commonData, suiteData, testData, fileName,
+                  isMobile=False):
         """
         Method to generate xlsx report.
         Args:
@@ -70,6 +71,7 @@ class reportgenerator():
         suiteData: suite result details
         testData: test result details
         fileName: file name
+        isMobile: Test Runs with mobile(android/iOS) or not
         """
         try:
             wb = Workbook()
@@ -129,7 +131,10 @@ class reportgenerator():
             self.row = 1
             self.col = 1
             for k, v in testData.items():
-                sheetName = k.split("-")[1]
+                if isMobile is False:
+                    sheetName = k.split("-")[1]
+                else:
+                    sheetName = k.split("_")[0].split("-", 1)[1]
                 sName = "ws" + str(index)
                 sName = wb.create_sheet()
                 sName = wb.worksheets[index]

@@ -99,6 +99,7 @@ class main():
         self.deviceList = []
         manager = Manager()
         self.robotResultList = manager.list()
+        self.xmlResultList = manager.list()
         self.commonObj = src.common.common()
         self.sendmailObj = src.sendemail.sendemail()
         self.reportObj = src.reportgenerator.reportgenerator()
@@ -324,8 +325,6 @@ class main():
             for tag in excludeTags:
                 excludeCmd += "-e " + tag + " "
 
-            xmlResultList = []
-
             remoteURL = "http://localhost:" + str(appiumPort) + "/wd/hub"
             for testSuite in self.testList:
                 robotCmd = ""
@@ -372,9 +371,10 @@ class main():
 
                 # collect robot result(s)
                 if self.platform is None:
-                    xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
-                                         + "/output-" + testSuiteName
-                                         + "-" + currentTime + ".xml")
+                    self.xmlResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                              + currentDate + "/output-"
+                                              + testSuiteName + "-"
+                                              + currentTime + ".xml")
                     self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
                                                 + currentDate + "/log-"
                                                 + testSuiteName +
@@ -385,9 +385,10 @@ class main():
                                                 + currentTime + ".html")
 
                 elif self.platform.lower() == "android" or "ios":
-                    xmlResultList.append(ROBOT_LOG_DIR_PATH + "/" + currentDate
-                                         + "/output-" + testSuiteName + "-"
-                                         + UDID + "_" + currentTime + ".xml")
+                    self.xmlResultList.append(ROBOT_LOG_DIR_PATH + "/"
+                                              + currentDate + "/output-"
+                                              + testSuiteName + "-" + UDID
+                                              + "_" + currentTime + ".xml")
                     self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
                                                 + currentDate + "/log-"
                                                 + testSuiteName + "-" + UDID
@@ -397,23 +398,39 @@ class main():
                                                 + testSuiteName + "-" + UDID
                                                 + "_" + currentTime + ".html")
 
-            self.robotResultList.extend(xmlResultList)
+        except Exception as error:
+            return (False, error)
 
-            # generate result call
-            self._suiteStatistics(xmlResultList)
-            self.testStatistics = self._testStatistics(xmlResultList)
+    def summaryReport(self):
+        """
+        Generate summary report
+        """
+        try:
+            currentDate = time.strftime("%Y-%m-%d")
+            currentTime = time.strftime("%Y%m%d-%H%M%S")
+
+            self.robotResultList.extend(self.xmlResultList)
+
+            self._suiteStatistics(self.xmlResultList)
+            self.testStatistics = self._testStatistics(self.xmlResultList)
             self.suiteStatistics = suiteResult
             commonConfig = self.configDict['TAF']['common']
 
             xlsReportPath = ROBOT_LOG_DIR_PATH + "/" + currentDate + \
                 "/" + "Summary-Report-" + currentTime + ".xlsx"
 
-            self.reportObj.xlsReport(commonConfig, self.suiteStatistics,
-                                     self.testStatistics, xlsReportPath)
+            if self.platform is None:
+                self.reportObj.xlsReport(commonConfig, self.suiteStatistics,
+                                         self.testStatistics, xlsReportPath,
+                                         False)
+            elif self.platform.lower() == "android" or "ios":
+                self.reportObj.xlsReport(commonConfig, self.suiteStatistics,
+                                         self.testStatistics, xlsReportPath,
+                                         True)
             self.robotResultList.append(xlsReportPath)
-            print("\n##########################################")
+            print("\n" + "#" * 90)
             print("Summary Report PATH: " + str(xlsReportPath))
-            print("##########################################\n")
+            print("#" * 90 + "\n")
 
         except Exception as error:
             return (False, error)
@@ -501,4 +518,5 @@ if __name__ == "__main__":
     objMain.configParser()
     objMain.setPrerequisite()
     objMain.suiteExecuter()
+    objMain.summaryReport()
     objMain.sendEmail()
