@@ -4,7 +4,7 @@ Resource    ${CURDIR}/../taf/lib/android/keywords/android.robot
 Resource    ${CURDIR}/../taf/lib/common/keywords/common.robot
 
 *** Variables ***
-${device}    emulator-5554
+${device}    ${deviceName}
 
 *** Test Cases ***
 Get Appium Process

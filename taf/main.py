@@ -457,6 +457,7 @@ class main():
                                   appiumPort, systemPort, ))
                 process.start()
             process.join()
+            time.sleep(2)
             appiumStatus = self.commonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:
