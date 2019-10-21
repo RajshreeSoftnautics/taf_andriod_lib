@@ -14,7 +14,7 @@ import src.common
 import src.sendemail
 import src.reportgenerator
 import lib.android.src.android
-import lib.common.src.common
+import lib.common.src.mobilecommon
 
 from robot.api import ExecutionResult, ResultVisitor
 from multiprocessing import Process
@@ -104,7 +104,7 @@ class main():
         self.sendmailObj = src.sendemail.sendemail()
         self.reportObj = src.reportgenerator.reportgenerator()
         self.andLibObj = lib.android.src.android.android()
-        self.commonLibObj = lib.common.src.common.common()
+        self.mobCommonLibObj = lib.common.src.mobilecommon.mobilecommon()
 
     def _suiteStatistics(self, xmlFileList):
         """
@@ -445,37 +445,37 @@ class main():
         elif self.platform.lower() == "android" and self.parallel is True:
             appiumPort = 4722
             systemPort = 8199
-            appiumStatus = self.commonLibObj.checkAppiumStatus()
+            appiumStatus = self.mobCommonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:
-                    self.commonLibObj.stopAppium(process)
+                    self.mobCommonLibObj.stopAppium(process)
             for UDID in self.device:
                 appiumPort = int(appiumPort) + 1
                 systemPort = int(systemPort) + 1
-                self.commonLibObj.startAppium(appiumPort)
+                self.mobCommonLibObj.startAppium(appiumPort)
                 process = Process(target=self._robotRun, args=(UDID,
                                   appiumPort, systemPort, ))
                 process.start()
             process.join()
             time.sleep(2)
-            appiumStatus = self.commonLibObj.checkAppiumStatus()
+            appiumStatus = self.mobCommonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:
-                    self.commonLibObj.stopAppium(process)
+                    self.mobCommonLibObj.stopAppium(process)
 
         elif self.platform.lower() == "android" and self.parallel is False:
             appiumPort = 4723
             systemPort = 8200
-            appiumStatus = self.commonLibObj.checkAppiumStatus()
+            appiumStatus = self.mobCommonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:
-                    self.commonLibObj.stopAppium(process)
-            self.commonLibObj.startAppium(appiumPort)
+                    self.mobCommonLibObj.stopAppium(process)
+            self.mobCommonLibObj.startAppium(appiumPort)
             self._robotRun(self.device[0], appiumPort, systemPort)
-            appiumStatus = self.commonLibObj.checkAppiumStatus()
+            appiumStatus = self.mobCommonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:
-                    self.commonLibObj.stopAppium(process)
+                    self.mobCommonLibObj.stopAppium(process)
 
     def sendEmail(self):
         """

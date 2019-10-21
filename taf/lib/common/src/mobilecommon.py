@@ -1,5 +1,5 @@
 ####################################################################
-# This is common python library of Test Automation Framework.
+# This is mobile common python library of Test Automation Framework.
 ####################################################################
 
 import os
@@ -7,7 +7,7 @@ import re
 import subprocess
 
 
-class common():
+class mobilecommon():
 
     def checkAppiumStatus(self):
         """
