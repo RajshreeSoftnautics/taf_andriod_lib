@@ -134,7 +134,7 @@ class reportgenerator():
                 if isMobile is False:
                     sheetName = k.split("-")[1]
                 else:
-                    sheetName = k.split("_")[0].split("-", 1)[1]
+                    sheetName = k.split("-", 1)[1].rsplit("_", 1)[0]
                 sName = "ws" + str(index)
                 sName = wb.create_sheet()
                 sName = wb.worksheets[index]
@@ -198,7 +198,7 @@ class reportgenerator():
                 suiteResult = []
                 for key, value in suiteData.items():
                     if isMobile is False:
-                        if key.lower() == sheetName:
+                        if key == sheetName:
                             result = [key]
                             result.extend([(d) for d in value.values()])
                             suiteResult.append(tuple(result))
@@ -206,13 +206,16 @@ class reportgenerator():
                         else:
                             continue
                     else:
-                        if key.lower() == sheetName.split("-")[0]:
+                        if key == sheetName.split("-")[0]:
                             result = [key]
                             result.extend([(d) for d in value.values()])
                             suiteResult.append(tuple(result))
                             break
-                        else:
-                            continue
+                        elif key == sheetName.split("-")[0].replace("_", " "):
+                            result = [key]
+                            result.extend([(d) for d in value.values()])
+                            suiteResult.append(tuple(result))
+                            break
 
                 self.col = 1
                 self.row = self._dataCreation(sName, suiteResult, self.row, 0)
