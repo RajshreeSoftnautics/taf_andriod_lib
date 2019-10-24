@@ -1,7 +1,7 @@
 *** Settings ***
 Library    OperatingSystem
 Resource    ${CURDIR}/../taf/lib/android/keywords/android.robot
-Resource    ${CURDIR}/../taf/lib/common/keywords/common.robot
+Resource    ${CURDIR}/../taf/lib/common/keywords/mobilecommon.robot
 
 *** Variables ***
 ${device}    ${deviceName}
@@ -68,9 +68,19 @@ ADB
     Sleep    30s
     Open WiFi Setting Page    ${device}
     Sleep    30s
+    Turn On WiFi    ${device}
+    Sleep    30s
+    Turn Off WiFi    ${device}
+    Sleep    30s
     Open Wireless Setting Page    ${device}
     Sleep    30s
     Reboot Device    ${device}
     Sleep    30s
     Open Bluetooth Mode    ${device}
     Sleep    30s
+
+WiFi
+    [Tags]    wifi only
+    Turn On WiFi    ${device}
+    Sleep    30s
+    Turn Off WiFi    ${device}

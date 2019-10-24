@@ -1,5 +1,5 @@
 *** Settings ***
-Library    ${CURDIR}/../src/common.py
+Library    ${CURDIR}/../src/mobilecommon.py
 
 *** Keywords ***
 Get Appium Process Id List

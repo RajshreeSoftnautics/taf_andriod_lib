@@ -254,6 +254,28 @@ Open WiFi Setting Page
     ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
     Run Keyword If    '${status}' == 'False'    Fail    ${result}
 
+Turn On WiFi
+    [Documentation]    Enable wifi
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am broadcast -a io.appium.settings.wifi --es setstatus enable
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
+Turn Off WiFi
+    [Documentation]    Disable wifi
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${deviceName}* - Connected device/emulator name
+    [Arguments]    ${deviceName}
+    ${rc}    ${result} =    Run And Return Rc And Output    adb -s ${deviceName} shell am broadcast -a io.appium.settings.wifi --es setstatus disable
+    ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
+    Run Keyword If    '${status}' == 'False'    Fail    ${result}
+
 Open Wireless Setting Page
     [Documentation]    Open wireless setting page
     ...

@@ -198,7 +198,7 @@ class reportgenerator():
                 suiteResult = []
                 for key, value in suiteData.items():
                     if isMobile is False:
-                        if key == sheetName:
+                        if key.lower() == sheetName.lower():
                             result = [key]
                             result.extend([(d) for d in value.values()])
                             suiteResult.append(tuple(result))
@@ -206,12 +206,12 @@ class reportgenerator():
                         else:
                             continue
                     else:
-                        if key == sheetName.split("-")[0]:
+                        if key.lower() == sheetName.lower().split("-")[0]:
                             result = [key]
                             result.extend([(d) for d in value.values()])
                             suiteResult.append(tuple(result))
                             break
-                        elif key == sheetName.split("-")[0].replace("_", " "):
+                        elif key.lower() == sheetName.lower().split("-")[0].replace("_", " "):
                             result = [key]
                             result.extend([(d) for d in value.values()])
                             suiteResult.append(tuple(result))
