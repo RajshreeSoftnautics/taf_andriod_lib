@@ -206,12 +206,13 @@ class reportgenerator():
                         else:
                             continue
                     else:
-                        if key.lower() == sheetName.lower().split("-")[0]:
+                        sheetNameSplit = sheetName.lower().split("-")[0]
+                        if key.lower() == sheetNameSplit:
                             result = [key]
                             result.extend([(d) for d in value.values()])
                             suiteResult.append(tuple(result))
                             break
-                        elif key.lower() == sheetName.lower().split("-")[0].replace("_", " "):
+                        elif key.lower() == sheetNameSplit.replace("_", " "):
                             result = [key]
                             result.extend([(d) for d in value.values()])
                             suiteResult.append(tuple(result))
