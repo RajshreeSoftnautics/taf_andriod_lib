@@ -25,9 +25,9 @@ Logout From Eribank
     Click Element    ${logout}
     Wait Until Page Contains Element    ${login}
 
-Get Coordinates
+Swipe Vertical
     Open WiFi Setting Page    ${deviceName}
-    Sleep    20s
-    ${coordinates}    Android Get X Y Coordinate    //android.widget.LinearLayout[@index=6]    //android.widget.LinearLayout[@index=1]
-    Sleep    40s
-    Swipe    ${coordinates[0]}    ${coordinates[1]}    ${coordinates[2]}    ${coordinates[3]}
+    Sleep    10s
+    Swipe Vertical    //android.widget.LinearLayout[@index=6]    //android.widget.LinearLayout[@index=1]
+    Sleep    10s
+    Swipe Vertical    //android.widget.LinearLayout[@index=3]    //android.widget.LinearLayout[@index=6]

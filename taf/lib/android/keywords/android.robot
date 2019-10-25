@@ -293,18 +293,25 @@ Open Wireless Setting Page
     ${status}    Run Keyword And Return Status    Should Be Equal    '${rc}'    '0'
     Run Keyword If    '${status}' == 'False'    Fail    ${result}
 
-Android Get X Y Coordinate
-    [Arguments]    ${firstLocator}    ${secondLocator}
-    ${getElementF}    Get Element Attribute    ${firstLocator}    bounds
-    ${getElementS}    Get Element Attribute    ${secondLocator}    bounds
+Swipe Vertical
+    [Documentation]    Swipe Screen Vertically 
+    ...
+    ...                *Arguments:*
+    ...
+    ...                *${startLocator}* - Start locator from where user want to swipe
+    ...
+    ...                *${endLocator}* - End locator upto which user want to swipe
+    [Arguments]    ${startLocator}    ${endLocator}
+    ${fElement}    Get Element Attribute    ${startLocator}    bounds
+    ${sElement}    Get Element Attribute    ${endLocator}    bounds
 
-    @{coordinateF} =	Split String From Right  	${getElementF}	]
+    @{coordinateF} =	Split String From Right  	${fElement}	]
     @{fCoordinateFElement} =	Split String From Right  	${coordinateF[0]}	[
     @{fCoordinateSElement} =	Split String From Right  	${coordinateF[1]}	[
     @{fCoordinateFElement} =	Split String  	${fCoordinateFElement[1]}    ,
     @{fCoordinateSElement} =	Split String  	${fCoordinateSElement[1]}    ,
 
-    @{coordinateS} =	Split String From Right  	${getElementS}	]
+    @{coordinateS} =	Split String From Right  	${sElement}	]
     @{sCoordinateFElement} =	Split String From Right  	${coordinateS[0]}	[
     @{sCoordinateSElement} =	Split String From Right  	${coordinateS[1]}	[
     @{sCoordinateFElement} =	Split String  	${sCoordinateFElement[1]}    ,
@@ -314,4 +321,5 @@ Android Get X Y Coordinate
     ${sy}    Convert To Integer    ${fCoordinateSElement[1]}
     ${ex}    Convert To Integer    ${sCoordinateFElement[0]}
     ${ey}    Convert To Integer    ${sCoordinateSElement[1]}
-    [Return]    ${sx}    ${sy}    ${ex}    ${ey}
+    
+    Swipe    ${sx}    ${sy}    ${ex}    ${ey}
