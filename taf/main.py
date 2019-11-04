@@ -91,6 +91,7 @@ class main():
         self.platform = None
         self.tests = None
         self.parallel = False
+        self.screenRecord = False
         self.testsToRun = ""
         self.testsToSkip = ""
         self.testResult = {}
@@ -167,6 +168,9 @@ class main():
                      -p/--parallel: Run parallel execution over all connected\
  android/iOS device/emulator(s). (Works with android/iOS component only.)
 
+                     -r/--screenRecord: Record connected android/iOS\
+ device/emulator(s) screen. (Works with android/iOS component only.)
+
                      -h/--help: Print Usage.
 
                      Examples:
@@ -188,10 +192,10 @@ class main():
         Command line argument parser
         """
         try:
-            opts, args = getopt.getopt(sys.argv[1:], 'c:t:i:e:ph',
+            opts, args = getopt.getopt(sys.argv[1:], 'c:t:i:e:prh',
                                        ['component=', 'testsuite=',
-                                        'include=', 'exclude=', 'parallel=',
-                                        'help='])
+                                        'include=', 'exclude=', 'parallel',
+                                        'screenRecord', 'help'])
         except getopt.GetoptError:
             self._usage()
             sys.exit(2)
@@ -210,6 +214,8 @@ class main():
                 self.testsToSkip = arg
             elif opt in ('-p', '--parallel'):
                 self.parallel = True
+            elif opt in ('-r', '--screenRecord'):
+                self.screenRecord = True
             else:
                 self._usage()
                 sys.exit(2)
@@ -328,8 +334,9 @@ class main():
             remoteURL = "http://localhost:" + str(appiumPort) + "/wd/hub"
             for testSuite in self.testList:
                 robotCmd = ""
+
                 currentDate = time.strftime("%Y-%m-%d")
-                currentTime = time.strftime("%Y%m%d-%H%M%S")
+                currentTime = time.strftime("%Y%m%d-%H%M%S")                
 
                 if not os.path.exists(ROBOT_LOG_DIR_PATH + "/" + currentDate):
                     os.makedirs(ROBOT_LOG_DIR_PATH + "/" + currentDate)
@@ -368,7 +375,6 @@ class main():
                 robotCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
 
                 os.system(robotCmd)
-                os.system("adb kill-server")
 
                 # collect robot result(s)
                 if self.platform is None:
@@ -407,6 +413,9 @@ class main():
         Generate summary report
         """
         try:
+            import pdb
+            pdb.set_trace()
+            
             currentDate = time.strftime("%Y-%m-%d")
             currentTime = time.strftime("%Y%m%d-%H%M%S")
 
@@ -450,15 +459,33 @@ class main():
             if appiumStatus:
                 for process in appiumStatus:
                     self.mobCommonLibObj.stopAppium(process)
-            for UDID in self.device:
-                appiumPort = int(appiumPort) + 1
-                systemPort = int(systemPort) + 1
-                self.mobCommonLibObj.startAppium(appiumPort)
-                process = Process(target=self._robotRun, args=(UDID,
-                                  appiumPort, systemPort, ))
-                process.start()
-            process.join()
-            time.sleep(2)
+
+            if self.screenRecord is True:
+                for UDID in self.device:
+                    appiumPort = int(appiumPort) + 1
+                    systemPort = int(systemPort) + 1
+                    self.mobCommonLibObj.startAppium(appiumPort)
+                    rProc = Process(target=self.andLibObj.startScreenRecording,
+                                    args=(UDID, "fileVideo" + str(UDID), ))
+                    rProc.start()
+                    process = Process(target=self._robotRun, args=(UDID,
+                                      appiumPort, systemPort, ))
+                    process.start()
+                process.join()
+                os.system("adb kill-server")
+                rProc.join()
+                time.sleep(2)
+            else:
+                for UDID in self.device:
+                    appiumPort = int(appiumPort) + 1
+                    systemPort = int(systemPort) + 1
+                    self.mobCommonLibObj.startAppium(appiumPort)
+                    process = Process(target=self._robotRun, args=(UDID,
+                                      appiumPort, systemPort, ))
+                    process.start()
+                process.join()
+                time.sleep(2)
+
             appiumStatus = self.mobCommonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:
@@ -472,19 +499,21 @@ class main():
                 for process in appiumStatus:
                     self.mobCommonLibObj.stopAppium(process)
             self.mobCommonLibObj.startAppium(appiumPort)
-            process = Process(target=self.andLibObj.startScreenRecording, args=(self.device[0],
-                                  "fileVideo", ))
-            process.start()
-            
 
-            process1 = Process(target=self._robotRun, args=(self.device[0],
-                                  appiumPort, systemPort, ))
-            process1.start()
+            if self.screenRecord is True:
+                rProc = Process(target=self.andLibObj.startScreenRecording,
+                                args=(self.device[0], "fileVideo_" + str(currentDate), ))
+                rProc.start()
+                robotProc = Process(target=self._robotRun,
+                                    args=(self.device[0], appiumPort,
+                                          systemPort, ))
+                robotProc.start()
+                robotProc.join()
+                os.system("adb kill-server")
+                rProc.join()
+            else:
+                self._robotRun(self.device[0], appiumPort, systemPort)
 
-            process1.join()
-            process.join()
-
-            #self._robotRun(self.device[0], appiumPort, systemPort)
             appiumStatus = self.mobCommonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:
