@@ -368,6 +368,7 @@ class main():
                 robotCmd += " -A " + ROBOT_ARG_FILE_PATH + " " + testSuite
 
                 os.system(robotCmd)
+                os.system("adb kill-server")
 
                 # collect robot result(s)
                 if self.platform is None:
@@ -471,7 +472,19 @@ class main():
                 for process in appiumStatus:
                     self.mobCommonLibObj.stopAppium(process)
             self.mobCommonLibObj.startAppium(appiumPort)
-            self._robotRun(self.device[0], appiumPort, systemPort)
+            process = Process(target=self.andLibObj.startScreenRecording, args=(self.device[0],
+                                  "fileVideo", ))
+            process.start()
+            
+
+            process1 = Process(target=self._robotRun, args=(self.device[0],
+                                  appiumPort, systemPort, ))
+            process1.start()
+
+            process1.join()
+            process.join()
+
+            #self._robotRun(self.device[0], appiumPort, systemPort)
             appiumStatus = self.mobCommonLibObj.checkAppiumStatus()
             if appiumStatus:
                 for process in appiumStatus:

@@ -15,6 +15,8 @@ It will run given test suite(s) using robot framework and create summary xlsx re
 * xmltodict (pip3 install xmltodict)
 * json (pip3 install jsonlib)
 * openpyxl (pip3 install openpyxl)
+* screen recording (https://github.com/Genymobile/scrcpy : sudo snap install scrcpy)
+  - Set Config Path for scrcpy: "export ADB=$ANDROID_HOME/platform-tools/adb scrcpy"
 
 ## How to use
 

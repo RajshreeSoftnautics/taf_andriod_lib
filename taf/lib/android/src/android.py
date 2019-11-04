@@ -5,6 +5,7 @@
 import os
 import re
 import subprocess
+import time
 
 
 class android():
@@ -28,6 +29,22 @@ class android():
             if self.deviceDict:
                 self.devices.append(self.deviceDict)
             return self.devices
+
+        except Exception as error:
+            return (False, error)
+
+    def startScreenRecording(self, deviceId, saveFilePath):
+        """
+        start connected device screen recording
+        Args:
+        deviceId: connected device id
+        saveFilePath: save recorded file location
+        """
+        try:
+            cmd = ""
+            cmd += "scrcpy --no-display -s " + str(deviceId)
+            cmd += " -r " + str(saveFilePath) + ".mp4"
+            os.system(cmd)
 
         except Exception as error:
             return (False, error)
