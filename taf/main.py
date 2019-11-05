@@ -101,6 +101,7 @@ class main():
         manager = Manager()
         self.robotResultList = manager.list()
         self.xmlResultList = manager.list()
+        self.dateTimeList = manager.list()
         self.commonObj = src.common.common()
         self.sendmailObj = src.sendemail.sendemail()
         self.reportObj = src.reportgenerator.reportgenerator()
@@ -336,31 +337,36 @@ class main():
                 robotCmd = ""
 
                 currentDate = time.strftime("%Y-%m-%d")
-                currentTime = time.strftime("%Y%m%d-%H%M%S")                
+                currentTime = time.strftime("%Y%m%d-%H%M%S")
 
-                if not os.path.exists(ROBOT_LOG_DIR_PATH + "/" + currentDate):
-                    os.makedirs(ROBOT_LOG_DIR_PATH + "/" + currentDate)
+                self.dateTimeList.append(currentDate)
+                self.dateTimeList.append(currentTime)
+
+                if not os.path.exists(ROBOT_LOG_DIR_PATH + "/" +
+                                      self.dateTimeList[0]):
+                    os.makedirs(ROBOT_LOG_DIR_PATH + "/" +
+                                self.dateTimeList[0])
 
                 testSuiteName = testSuite.split("/")[-1].split(".")[0]
 
                 if self.platform is None:
                     robotCmd = "robot -o output-" + testSuiteName + \
-                               "-" + currentTime
+                               "-" + self.dateTimeList[1]
                     robotCmd += " -l log-" + testSuiteName + "-" + \
-                                currentTime
+                                self.dateTimeList[1]
                     robotCmd += " -r report-" + testSuiteName + \
-                                "-" + currentTime
+                                "-" + self.dateTimeList[1]
 
                 elif self.platform.lower() == "android" or "ios":
                     robotCmd = "robot -o output-" + testSuiteName + "-" + \
-                               UDID + "_" + currentTime
+                               UDID + "_" + self.dateTimeList[1]
                     robotCmd += " -l log-" + testSuiteName + "-" + UDID + \
-                                "_" + currentTime
+                                "_" + self.dateTimeList[1]
                     robotCmd += " -r report-" + testSuiteName + "-" + \
-                                UDID + "_" + currentTime
+                                UDID + "_" + self.dateTimeList[1]
 
                 robotCmd += " -d " + ROBOT_LOG_DIR_PATH + "/" + \
-                            currentDate + "/"
+                            self.dateTimeList[0] + "/"
                 robotCmd += " "
                 robotCmd += includeCmd
                 robotCmd += excludeCmd
@@ -379,31 +385,41 @@ class main():
                 # collect robot result(s)
                 if self.platform is None:
                     self.xmlResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                              + currentDate + "/output-"
+                                              + self.dateTimeList[0]
+                                              + "/output-"
                                               + testSuiteName + "-"
-                                              + currentTime + ".xml")
+                                              + self.dateTimeList[1] + ".xml")
                     self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                                + currentDate + "/log-"
+                                                + self.dateTimeList[0]
+                                                + "/log-"
                                                 + testSuiteName +
-                                                "-" + currentTime + ".html")
+                                                "-" + self.dateTimeList[1]
+                                                + ".html")
                     self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                                + currentDate + "/report-"
+                                                + self.dateTimeList[0]
+                                                + "/report-"
                                                 + testSuiteName + "-"
-                                                + currentTime + ".html")
+                                                + self.dateTimeList[1]
+                                                + ".html")
 
                 elif self.platform.lower() == "android" or "ios":
                     self.xmlResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                              + currentDate + "/output-"
-                                              + testSuiteName + "-" + UDID
-                                              + "_" + currentTime + ".xml")
+                                              + self.dateTimeList[0]
+                                              + "/output-" + testSuiteName
+                                              + "-" + UDID + "_"
+                                              + self.dateTimeList[1] + ".xml")
                     self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                                + currentDate + "/log-"
-                                                + testSuiteName + "-" + UDID
-                                                + "_" + currentTime + ".html")
+                                                + self.dateTimeList[0]
+                                                + "/log-" + testSuiteName
+                                                + "-" + UDID + "_"
+                                                + self.dateTimeList[1]
+                                                + ".html")
                     self.robotResultList.append(ROBOT_LOG_DIR_PATH + "/"
-                                                + currentDate + "/report-"
-                                                + testSuiteName + "-" + UDID
-                                                + "_" + currentTime + ".html")
+                                                + self.dateTimeList[0]
+                                                + "/report-" + testSuiteName
+                                                + "-" + UDID + "_"
+                                                + self.dateTimeList[1]
+                                                + ".html")
 
         except Exception as error:
             return (False, error)
@@ -413,12 +429,6 @@ class main():
         Generate summary report
         """
         try:
-            import pdb
-            pdb.set_trace()
-            
-            currentDate = time.strftime("%Y-%m-%d")
-            currentTime = time.strftime("%Y%m%d-%H%M%S")
-
             self.robotResultList.extend(self.xmlResultList)
 
             self._suiteStatistics(self.xmlResultList)
@@ -426,8 +436,8 @@ class main():
             self.suiteStatistics = suiteResult
             commonConfig = self.configDict['TAF']['common']
 
-            xlsReportPath = ROBOT_LOG_DIR_PATH + "/" + currentDate + \
-                "/" + "Summary-Report-" + currentTime + ".xlsx"
+            xlsReportPath = ROBOT_LOG_DIR_PATH + "/" + self.dateTimeList[0] + \
+                "/" + "Summary-Report-" + self.dateTimeList[1] + ".xlsx"
 
             if self.platform is None:
                 self.reportObj.xlsReport(commonConfig, self.suiteStatistics,
@@ -449,6 +459,9 @@ class main():
         """
         Execute given test suite(s)
         """
+        currentDate = time.strftime("%Y-%m-%d")
+        currentTime = time.strftime("%Y%m%d-%H%M%S")
+
         if self.platform is None:
             self._robotRun()
 
@@ -466,7 +479,10 @@ class main():
                     systemPort = int(systemPort) + 1
                     self.mobCommonLibObj.startAppium(appiumPort)
                     rProc = Process(target=self.andLibObj.startScreenRecording,
-                                    args=(UDID, "fileVideo" + str(UDID), ))
+                                    args=(UDID, ROBOT_LOG_DIR_PATH + "/"
+                                          + str(currentDate) + "/" +
+                                          "screen_record_" + str(UDID)
+                                          + "_" + str(currentTime), ))
                     rProc.start()
                     process = Process(target=self._robotRun, args=(UDID,
                                       appiumPort, systemPort, ))
@@ -502,7 +518,10 @@ class main():
 
             if self.screenRecord is True:
                 rProc = Process(target=self.andLibObj.startScreenRecording,
-                                args=(self.device[0], "fileVideo_" + str(currentDate), ))
+                                args=(self.device[0], ROBOT_LOG_DIR_PATH + "/"
+                                      + str(currentDate) + "/" +
+                                      "screen_record_" + str(self.device[0])
+                                      + "_" + str(currentTime), ))
                 rProc.start()
                 robotProc = Process(target=self._robotRun,
                                     args=(self.device[0], appiumPort,
